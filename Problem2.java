@@ -1,45 +1,36 @@
 import java.util.Scanner;
 public class Problem2 {
-
     public static void main(String[] args) {
-
         Scanner scan = new Scanner (System.in);
-        int xp,yp;
-        int xq,yq;
-        int tam_campo;
-        int a;
-        
-        
-        int xr,yr;
-        System.out.println("Entre com a:");
-        a = scan.nextInt();        
-        System.out.println("Entre com o tamanho do campo:");
-        tam_campo = scan.nextInt();
-        System.out.println("Entre com xp:");
-        System.out.println("Entre com o primeiro Ponto P:");
-        System.out.println("Entre com xp:");
+        int xp,yp,xq,yq,p,a,b,xr,yr;
+        System.out.println("Digite A:");
+        a = scan.nextInt();
+        System.out.println("Digite B:");
+        b = scan.nextInt();          
+        System.out.println("Digite p:");
+        p = scan.nextInt();
+        System.out.println("Digite Xp:");
         xp = scan.nextInt();
-        System.out.println("Entre com yp:");
+        System.out.println("Digite Yp:");
         yp = scan.nextInt();
-        System.out.println("Entre com o segundo Ponto Q:");
-        System.out.println("Entre com xq:");
+        System.out.println("Digite Xq:");
         xq = scan.nextInt();
-        System.out.println("Entre com yq:");
+        System.out.println("Digite Yq:");
         yq = scan.nextInt();
-        
+        if (4*(Math.pow(a,3)) + 27*(Math.pow(b,2))==0 || p<=1){ // Condição para curva elíptica não singular
+           System.out.println("A e B não são aceitáveis");
+           return;         
+        } 
         while (true){
-//            System.out.println("Somando...");
-//            System.out.println("P = "+ "("+xp+","+yp+")");
-//            System.out.println("Q = "+ "("+xq+","+yq+")");
             int lambda;
-            if (xp == xq && yp == yq){
+            if (xp == xq && yp == yq){ // Loop que roda enquanto o ponto final não for igual ao inicial
                 if(yp == 0){
-                    System.out.println("Ponto R esta no infinito");
+                    System.out.println("Ponto R está no infinito");
                     break;        
                 }
                 else{
-                    int numerador = (int)(3*(float)Math.pow(xp,2) + a) ;
-                    int denominador = 2 * yp;
+                    int numerador = (int)(3*(float)Math.pow(xp,2) + a) ; // Equação do numerador da inclinação da reta para pontos iguais
+                    int denominador = 2 * yp; // Equação do denominador da inclinação da reta para pontos iguais
                     if (numerador <0 && denominador <0){
                         numerador = Math.abs(numerador);
                         denominador = Math.abs(denominador);
@@ -47,17 +38,16 @@ public class Problem2 {
                         numerador = - numerador;
                         denominador = Math.abs(denominador);
                     }
-                    numerador = numerador % tam_campo;
-                    if(numerador <0) numerador += tam_campo;
-                    denominador = getInverse(denominador, tam_campo);
-                    lambda = numerador*denominador;
-                    lambda = lambda % tam_campo;
-                    if(lambda <0) lambda += tam_campo;                 
-                }
-  
+                    numerador = numerador % p;
+                    if(numerador <0) numerador += p;
+                    denominador = getInverse(denominador, p); 
+                    lambda = numerador*denominador; // Cálculo da fração em relação ao modular p
+                    lambda = lambda % p;
+                    if(lambda <0) lambda += p;                 
+                }  
             }
             else if (xp == xq && yp != yq){
-                System.out.println("Ponto R esta no infinito");
+                System.out.println("Ponto R está no infinito");
                 System.out.println("R = "+"("+xq+","+yq+")");
                 break;
             }
@@ -72,19 +62,19 @@ public class Problem2 {
                     numerador = - numerador;
                     denominador = Math.abs(denominador);
                 }
-                numerador = numerador % tam_campo;
-                if(numerador <0) numerador += tam_campo;
-                denominador = getInverse(denominador, tam_campo);    
+                numerador = numerador % p;
+                if(numerador <0) numerador += p;
+                denominador = getInverse(denominador, p);    
                 lambda = numerador*denominador;
-                lambda = lambda % tam_campo;
-                if(lambda <0) lambda += tam_campo;
+                lambda = lambda % p;
+                if(lambda <0) lambda += p;
             }
             xr = (int)((float)Math.pow(lambda,2) - xp - xq);
-            xr = xr % tam_campo;
-            if(xr <0) xr += tam_campo;
+            xr = xr % p;
+            if(xr <0) xr += p;
             yr = lambda*(xp - xr) - yp;
-            yr = yr % tam_campo;
-            if(yr <0) yr += tam_campo;
+            yr = yr % p;
+            if(yr <0) yr += p;
             System.out.println("R = "+ "("+xr+","+yr+")");
 
             xp = xr;          
@@ -92,11 +82,11 @@ public class Problem2 {
         }
 
     }
-    public static int getInverse(int number, int modnum)
+    public static int getInverse(int numerador, int modnum) // Função para achar o multiplicador modular inverso
 	{
-            number = number % modnum;
+            numerador = numerador % modnum;
             for (int x = 1; x < modnum; x++)
-               if ((number * x) % modnum == 1)
+               if ((numerador * x) % modnum == 1)
                   return x;
             return 1;
 	}
